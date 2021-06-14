@@ -1,0 +1,78 @@
+Building FMU (Visual C++) 
+64-bit mode activated. 
+**********************************************************************
+** Visual Studio 2017 Developer Command Prompt v15.8.7
+** Copyright (c) 2017 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x64'
+Compiling the model (Visual C++) with FMI. 
+ 
+dsmodel.c
+c:\program files\dymola 2019\source\dsutil.h(259): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:/Program Files/Dymola 2019\source\matrixop.h(200): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+C:/Program Files/Dymola 2019\source\matrixop.h(1023): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3133): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3523): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3571): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3581): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3590): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3599): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3611): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3621): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3631): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+c:\program files\dymola 2019\source\matrixop.c(3716): warning C4267: 'function': conversion from 'size_t' to 'SizeType', possible loss of data
+C:/Program Files/Dymola 2019\source\ModelicaStrings.c(99): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:/Program Files/Dymola 2019\source\ModelicaStrings.c(132): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:/Program Files/Dymola 2019\source\ModelicaStrings.c(230): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+dsmodel.c(1358): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+Flags for compilation: /D"MODEL_IDENTIFIER=MShootBS2019_ZoneCO2R2C2PID" /D"FMI_MODULE_NAME=MShootBS2019_ZoneCO2R2C2PID.dll" /D"DYMOSIM_SOLVER_NUM=8" /D"DYMOSIM_SOLVER_TOL=1e-09" /D"DYMOSIM_SOLVER_FIXED_STEP=1" /D"FMI_2" 
+simulateDLL.c
+Microsoft (R) Incremental Linker Version 14.15.26730.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/stack:0x500000 /MACHINE:X64 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCD /NODEFAULTLIB:MSVCRT /OPT:NOREF 
+   Creating library ~FMUOutput\binaries\win64\MShootBS2019_ZoneCO2R2C2PID.lib and object ~FMUOutput\binaries\win64\MShootBS2019_ZoneCO2R2C2PID.exp
+**********************************************************************
+** Visual Studio 2017 Developer Command Prompt v15.8.7
+** Copyright (c) 2017 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x86'
+Compiling the model (Visual C++) with FMI. 
+ 
+dsmodel.c
+Flags for compilation: /D"MODEL_IDENTIFIER=MShootBS2019_ZoneCO2R2C2PID" /D"FMI_MODULE_NAME=MShootBS2019_ZoneCO2R2C2PID.dll" /D"DYMOSIM_SOLVER_NUM=8" /D"DYMOSIM_SOLVER_TOL=1e-09" /D"DYMOSIM_SOLVER_FIXED_STEP=1" /D"FMI_2" 
+simulateDLL.c
+Microsoft (R) Incremental Linker Version 14.15.26730.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/stack:0x500000 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCD /NODEFAULTLIB:MSVCRT /OPT:NOREF 
+   Creating library ~FMUOutput\binaries\win32\MShootBS2019_ZoneCO2R2C2PID.lib and object ~FMUOutput\binaries\win32\MShootBS2019_ZoneCO2R2C2PID.exp
+Adding [modelDescription.xml] ... OK
+Adding [binaries\win32\MShootBS2019_ZoneCO2R2C2PID.dll] ... OK
+Adding [binaries\win64\MShootBS2019_ZoneCO2R2C2PID.dll] ... OK
+Adding [documentation\index.html] ... OK
+Adding [documentation\LICENSE_CVODE.txt] ... OK
+Adding [documentation\LICENSE_f2c.txt] ... OK
+Adding [documentation\LICENSE_FMI.txt] ... OK
+Adding [documentation\LICENSE_HDF5.txt] ... OK
+Adding [documentation\LICENSE_LAPACK.txt] ... OK
+Adding [documentation\LICENSE_ModelicaFFT.txt] ... OK
+Adding [documentation\LICENSE_ModelicaInternal.txt] ... OK
+Adding [documentation\LICENSE_ModelicaIO.txt] ... OK
+Adding [documentation\LICENSE_ModelicaMatIO.txt] ... OK
+Adding [documentation\LICENSE_ModelicaRandom.txt] ... OK
+Adding [documentation\LICENSE_ModelicaStandardTables.txt] ... OK
+Adding [documentation\LICENSE_ModelicaStrings.txt] ... OK
+Adding [documentation\LICENSE_ModelicaUtilities.txt] ... OK
+Adding [documentation\LICENSE_SUNDIALS.txt] ... OK
+Adding [documentation\LICENSE_SuperLU_MT.txt] ... OK
+Adding [documentation\LICENSE_TPL.txt] ... OK
+Adding [documentation\LICENSE_uthash.txt] ... OK
+Adding [documentation\LICENSE_win32_dirent.txt] ... OK
+Adding [documentation\LICENSE_ZLIB.txt] ... OK
+Adding [documentation\ModelicaLicense2.html] ... OK
+Adding [documentation\_main.html] ... OK
+Adding [documentation\_opensource.html] ... OK
+ 
+Successful creation of MShootBS2019_ZoneCO2R2C2PID.fmu. 
+ 

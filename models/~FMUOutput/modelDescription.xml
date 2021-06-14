@@ -1,0 +1,3814 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  fmiVersion="2.0"
+  modelName="MShootBS2019_ZoneCO2R2C2PID"
+  guid="{398e4614-5eb8-4516-b5a6-5846d4ed383c}"
+  description="Simple zone"
+  generationTool="Dymola Version 2019 (64-bit), 2018-04-11 (using Dassl with tolerance 1e-09)"
+  generationDateAndTime="2019-05-27T06:20:21Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="12">
+  <CoSimulation
+    modelIdentifier="MShootBS2019_ZoneCO2R2C2PID"
+    canHandleVariableCommunicationStepSize="true"
+    canInterpolateInputs="true"
+    maxOutputDerivativeOrder="1"
+    canBeInstantiatedOnlyOncePerProcess="true"
+    canNotUseMemoryManagementFunctions="true"
+    providesDirectionalDerivative="true"/>
+  <UnitDefinitions>
+    <Unit
+      name="1"/>
+    <Unit
+      name="1/K">
+      <BaseUnit K="-1"/>
+    </Unit>
+    <Unit
+      name="J">
+      <BaseUnit kg="1"
+        m="2"
+        s="-2"/>
+    </Unit>
+    <Unit
+      name="J/K">
+      <BaseUnit kg="1"
+        m="2"
+        s="-2"
+        K="-1"/>
+    </Unit>
+    <Unit
+      name="K">
+      <BaseUnit K="1"/>
+      <DisplayUnit
+        name="degC"
+        offset="-273.15"/>
+    </Unit>
+    <Unit
+      name="K/W">
+      <BaseUnit kg="-1"
+        m="-2"
+        s="3"
+        K="1"/>
+    </Unit>
+    <Unit
+      name="K/s">
+      <BaseUnit s="-1"
+        K="1"/>
+    </Unit>
+    <Unit
+      name="W">
+      <BaseUnit kg="1"
+        m="2"
+        s="-3"/>
+    </Unit>
+    <Unit
+      name="s">
+      <BaseUnit s="1"/>
+    </Unit>
+  </UnitDefinitions>
+  <TypeDefinitions>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.RealInput">
+      <Real/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.RealOutput">
+      <Real/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.RealVectorInput">
+      <Real/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.SIunits.HeatCapacity">
+      <Real
+        quantity="HeatCapacity"
+        unit="J/K"/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.SIunits.HeatFlowRate">
+      <Real
+        quantity="Power"
+        unit="W"/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.SIunits.LinearTemperatureCoefficient">
+      <Real
+        quantity="LinearTemperatureCoefficient"
+        unit="1/K"/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.SIunits.Temperature">
+      <Real
+        quantity="ThermodynamicTemperature"
+        unit="K"
+        displayUnit="degC"
+        min="0.0"
+        nominal="300.0"/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.SIunits.TemperatureDifference">
+      <Real
+        quantity="ThermodynamicTemperature"
+        unit="K"
+        relativeQuantity="true"/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.SIunits.TemperatureSlope">
+      <Real
+        quantity="TemperatureSlope"
+        unit="K/s"/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.SIunits.ThermalResistance">
+      <Real
+        quantity="ThermalResistance"
+        unit="K/W"/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.SIunits.Time">
+      <Real
+        quantity="Time"
+        unit="s"/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.Blocks.Types.Init">
+      <Enumeration>
+        <Item name="NoInit"
+          value="1"
+          description="No initialization (start values are used as guess values with fixed=false)"/>
+        <Item name="SteadyState"
+          value="2"
+          description="Steady state initialization (derivatives of states are zero)"/>
+        <Item name="InitialState"
+          value="3"
+          description="Initialization with initial states"/>
+        <Item name="InitialOutput"
+          value="4"
+          description="Initialization with initial outputs (and steady state of the states if possible)"/>
+      </Enumeration>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.Blocks.Types.InitPID">
+      <Enumeration>
+        <Item name="NoInit"
+          value="1"
+          description="No initialization (start values are used as guess values with fixed=false)"/>
+        <Item name="SteadyState"
+          value="2"
+          description="Steady state initialization (derivatives of states are zero)"/>
+        <Item name="InitialState"
+          value="3"
+          description="Initialization with initial states"/>
+        <Item name="InitialOutput"
+          value="4"
+          description="Initialization with initial outputs (and steady state of the states if possible)"/>
+        <Item name="DoNotUse_InitialIntegratorState"
+          value="5"
+          description="Do not use, only for backward compatibility (initialize only integrator state)"/>
+      </Enumeration>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.Blocks.Types.SimpleController">
+      <Enumeration>
+        <Item name="P"
+          value="1"
+          description="P controller"/>
+        <Item name="PI"
+          value="2"
+          description="PI controller"/>
+        <Item name="PD"
+          value="3"
+          description="PD controller"/>
+        <Item name="PID"
+          value="4"
+          description="PID controller"/>
+      </Enumeration>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.Blocks.Types.Smoothness">
+      <Enumeration>
+        <Item name="LinearSegments"
+          value="1"
+          description="Table points are linearly interpolated"/>
+        <Item name="ContinuousDerivative"
+          value="2"
+          description="Table points are interpolated (by Akima splines) such that the first derivative is continuous"/>
+        <Item name="ConstantSegments"
+          value="3"
+          description="Table points are not interpolated, but the value from the previous abscissa point is returned"/>
+        <Item name="MonotoneContinuousDerivative1"
+          value="4"
+          description="Table points are interpolated (by Fritsch-Butland splines) such that the monotonicity is preserved and the first derivative is continuous"/>
+        <Item name="MonotoneContinuousDerivative2"
+          value="5"
+          description="Table points are interpolated (by Steffen splines) such that the monotonicity is preserved and the first derivative is continuous"/>
+      </Enumeration>
+    </SimpleType>
+  </TypeDefinitions>
+  <DefaultExperiment startTime="0.0"
+    stopTime="1.0"
+    tolerance="1E-09"/>
+  <ModelVariables>
+    <!-- Index for next variable = 1 -->
+    <ScalarVariable
+      name="RExt"
+      valueReference="16777216"
+      description="External wall thermal resistance"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 2 -->
+    <ScalarVariable
+      name="RInt"
+      valueReference="16777217"
+      description="Internal wall thermal resistance"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 3 -->
+    <ScalarVariable
+      name="tmass"
+      valueReference="16777218"
+      description="Zone thermal mass factor [-]"
+      causality="parameter"
+      variability="tunable">
+      <Real start="5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 4 -->
+    <ScalarVariable
+      name="imass"
+      valueReference="16777219"
+      description="Zone internal thermal mass factor [-]"
+      causality="parameter"
+      variability="tunable">
+      <Real start="10"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 5 -->
+    <ScalarVariable
+      name="shgc"
+      valueReference="16777220"
+      description="Solar heat gain coefficient [-]"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="0.5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 6 -->
+    <ScalarVariable
+      name="maxHeat"
+      valueReference="16777221"
+      description="Heating power of radiators [W]"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="5000"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 7 -->
+    <ScalarVariable
+      name="Tve"
+      valueReference="16777222"
+      description="Ventilation air temperature"
+      causality="parameter"
+      variability="tunable">
+      <Real start="21"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 8 -->
+    <ScalarVariable
+      name="occheff"
+      valueReference="16777223"
+      description="Occupant heat generation effectiveness"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="1.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 9 -->
+    <ScalarVariable
+      name="CO2pp"
+      valueReference="16777224"
+      description="CO2 generation per person [m3/h]"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0.02"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 10 -->
+    <ScalarVariable
+      name="CO2n"
+      valueReference="16777225"
+      description="CO2 Neutral Level"
+      causality="parameter"
+      variability="tunable">
+      <Real start="400"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 11 -->
+    <ScalarVariable
+      name="Vinf"
+      valueReference="16777226"
+      description="Infiltration flow rate [m3/h]"
+      causality="parameter"
+      variability="tunable">
+      <Real start="100"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 12 -->
+    <ScalarVariable
+      name="Vi"
+      valueReference="16777227"
+      description="Air volume [m3]"
+      causality="parameter"
+      variability="tunable">
+      <Real start="300"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 13 -->
+    <ScalarVariable
+      name="maxVent"
+      valueReference="16777228"
+      description="Maximum ventilation flowrate [m3/h]"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="2000"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 14 -->
+    <ScalarVariable
+      name="kco2"
+      valueReference="16777229"
+      description="Gain of CO2 controller"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="10"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 15 -->
+    <ScalarVariable
+      name="kt"
+      valueReference="16777230"
+      description="Gain of temperature controller"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="100"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 16 -->
+    <ScalarVariable
+      name="solrad"
+      valueReference="352321536"
+      description="Solar radiation [W]"
+      causality="input">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 17 -->
+    <ScalarVariable
+      name="Tout"
+      valueReference="352321537"
+      description="Outdoor temperature [degC]"
+      causality="input">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"
+        min="0.0"
+        nominal="300.0"
+        start="288.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 18 -->
+    <ScalarVariable
+      name="T"
+      valueReference="335544320"
+      description="[K]"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="K"
+        min="0.0"
+        nominal="300.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 19 -->
+    <ScalarVariable
+      name="re.Q_flow"
+      valueReference="637534208"
+      description="Heat flow rate from port_a -&gt; port_b">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 20 -->
+    <ScalarVariable
+      name="re.dT"
+      valueReference="637534209"
+      description="port_a.T - port_b.T">
+      <Real
+        declaredType="Modelica.SIunits.TemperatureDifference"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 21 -->
+    <ScalarVariable
+      name="re.port_a.T"
+      valueReference="436207617"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 22 -->
+    <ScalarVariable
+      name="re.port_a.Q_flow"
+      valueReference="637534208"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 23 -->
+    <ScalarVariable
+      name="re.port_b.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 24 -->
+    <ScalarVariable
+      name="re.port_b.Q_flow"
+      valueReference="637534225"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 25 -->
+    <ScalarVariable
+      name="re.R"
+      valueReference="100663298"
+      description="Constant thermal resistance of material"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.ThermalResistance"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 26 -->
+    <ScalarVariable
+      name="temperatureSensor.T"
+      valueReference="33554432"
+      description="Absolute temperature as output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 27 -->
+    <ScalarVariable
+      name="temperatureSensor.port.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 28 -->
+    <ScalarVariable
+      name="temperatureSensor.port.Q_flow"
+      valueReference="100663299"
+      description="Heat flow rate (positive if flowing from outside into the component)"
+      variability="constant">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 29 -->
+    <ScalarVariable
+      name="solarCoeff.k"
+      valueReference="100663300"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 30 -->
+    <ScalarVariable
+      name="solarCoeff.u"
+      valueReference="436207616"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 31 -->
+    <ScalarVariable
+      name="solarCoeff.y"
+      valueReference="637534213"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 32 -->
+    <ScalarVariable
+      name="prescribedHeatFlow.T_ref"
+      valueReference="16777231"
+      description="Reference temperature"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"
+        start="293.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 33 -->
+    <ScalarVariable
+      name="prescribedHeatFlow.alpha"
+      valueReference="16777232"
+      description="Temperature coefficient of heat flow rate"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.LinearTemperatureCoefficient"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 34 -->
+    <ScalarVariable
+      name="prescribedHeatFlow.Q_flow"
+      valueReference="637534213">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 35 -->
+    <ScalarVariable
+      name="prescribedHeatFlow.port.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 36 -->
+    <ScalarVariable
+      name="prescribedHeatFlow.port.Q_flow"
+      valueReference="637534214"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 37 -->
+    <ScalarVariable
+      name="hmltp.u1"
+      valueReference="436207618"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 38 -->
+    <ScalarVariable
+      name="hmltp.u2"
+      valueReference="637534215"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 39 -->
+    <ScalarVariable
+      name="hmltp.y"
+      valueReference="637534216"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 40 -->
+    <ScalarVariable
+      name="occHeatGain.T_ref"
+      valueReference="16777233"
+      description="Reference temperature"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"
+        start="293.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 41 -->
+    <ScalarVariable
+      name="occHeatGain.alpha"
+      valueReference="16777234"
+      description="Temperature coefficient of heat flow rate"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.LinearTemperatureCoefficient"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 42 -->
+    <ScalarVariable
+      name="occHeatGain.Q_flow"
+      valueReference="637534216">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 43 -->
+    <ScalarVariable
+      name="occHeatGain.port.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 44 -->
+    <ScalarVariable
+      name="occHeatGain.port.Q_flow"
+      valueReference="637534217"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 45 -->
+    <ScalarVariable
+      name="MetabolicHeat.n"
+      valueReference="100663306"
+      description="Number of inputs (= number of outputs)"
+      variability="constant">
+      <Integer start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 46 -->
+    <ScalarVariable
+      name="MetabolicHeat.u[1]"
+      valueReference="33554432"
+      description="Connector of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 47 -->
+    <ScalarVariable
+      name="MetabolicHeat.y[1]"
+      valueReference="637534219"
+      description="Connector of Real output signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 48 -->
+    <ScalarVariable
+      name="MetabolicHeat.tableOnFile"
+      valueReference="100663308"
+      description="= true, if table is defined on file or in function usertab"
+      variability="constant">
+      <Boolean start="false"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 49 -->
+    <ScalarVariable
+      name="MetabolicHeat.table[1,1]"
+      valueReference="16777235"
+      description="Table matrix (grid = first column; e.g., table=[0,2])"
+      causality="parameter"
+      variability="tunable">
+      <Real start="293.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 50 -->
+    <ScalarVariable
+      name="MetabolicHeat.table[1,2]"
+      valueReference="16777236"
+      description="Table matrix (grid = first column; e.g., table=[0,2])"
+      causality="parameter"
+      variability="tunable">
+      <Real start="84.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 51 -->
+    <ScalarVariable
+      name="MetabolicHeat.table[2,1]"
+      valueReference="16777237"
+      description="Table matrix (grid = first column; e.g., table=[0,2])"
+      causality="parameter"
+      variability="tunable">
+      <Real start="325.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 52 -->
+    <ScalarVariable
+      name="MetabolicHeat.table[2,2]"
+      valueReference="16777238"
+      description="Table matrix (grid = first column; e.g., table=[0,2])"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 53 -->
+    <ScalarVariable
+      name="MetabolicHeat.verboseRead"
+      valueReference="16777239"
+      description="= true, if info message that file is loading is to be printed"
+      causality="parameter"
+      variability="fixed">
+      <Boolean start="true"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 54 -->
+    <ScalarVariable
+      name="MetabolicHeat.columns[1]"
+      valueReference="100663309"
+      description="Columns of table to be interpolated"
+      variability="constant">
+      <Integer start="2"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 55 -->
+    <ScalarVariable
+      name="MetabolicHeat.smoothness"
+      valueReference="100663310"
+      description="Smoothness of table interpolation"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.Smoothness"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 56 -->
+    <ScalarVariable
+      name="prescribedTemperature.port.T"
+      valueReference="436207617"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 57 -->
+    <ScalarVariable
+      name="prescribedTemperature.port.Q_flow"
+      valueReference="637534225"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 58 -->
+    <ScalarVariable
+      name="prescribedTemperature.T"
+      valueReference="436207617">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 59 -->
+    <ScalarVariable
+      name="heatFlowSensor.Q_flow"
+      valueReference="335544324"
+      description="Heat flow from port_a to port_b as output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 60 -->
+    <ScalarVariable
+      name="heatFlowSensor.port_a.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 61 -->
+    <ScalarVariable
+      name="heatFlowSensor.port_a.Q_flow"
+      valueReference="335544324"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 62 -->
+    <ScalarVariable
+      name="heatFlowSensor.port_b.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 63 -->
+    <ScalarVariable
+      name="heatFlowSensor.port_b.Q_flow"
+      valueReference="369098770"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 64 -->
+    <ScalarVariable
+      name="Qr"
+      valueReference="335544321"
+      description="Heat supplied by radiators [Wh]"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="J"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 65 -->
+    <ScalarVariable
+      name="prescribedHeatFlow1.T_ref"
+      valueReference="16777240"
+      description="Reference temperature"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"
+        start="293.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 66 -->
+    <ScalarVariable
+      name="prescribedHeatFlow1.alpha"
+      valueReference="16777241"
+      description="Temperature coefficient of heat flow rate"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.LinearTemperatureCoefficient"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 67 -->
+    <ScalarVariable
+      name="prescribedHeatFlow1.Q_flow"
+      valueReference="369098771">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 68 -->
+    <ScalarVariable
+      name="prescribedHeatFlow1.port.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 69 -->
+    <ScalarVariable
+      name="prescribedHeatFlow1.port.Q_flow"
+      valueReference="369098770"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 70 -->
+    <ScalarVariable
+      name="occeffectiv.k"
+      valueReference="100663316"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 71 -->
+    <ScalarVariable
+      name="occeffectiv.u"
+      valueReference="637534219"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 72 -->
+    <ScalarVariable
+      name="occeffectiv.y"
+      valueReference="637534215"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 73 -->
+    <ScalarVariable
+      name="cair.C"
+      valueReference="100663317"
+      description="Heat capacity of element (= cp*m)"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.HeatCapacity"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 74 -->
+    <ScalarVariable
+      name="cair.T"
+      valueReference="33554432"
+      description="Temperature of element"
+      initial="exact">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"
+        start="293.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 75 -->
+    <ScalarVariable
+      name="der(cair.T)"
+      valueReference="587202560"
+      description="der(Temperature of element)">
+      <Real
+        unit="K/s"
+        derivative="74"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 76 -->
+    <ScalarVariable
+      name="cair.der_T"
+      valueReference="587202560"
+      description="Time derivative of temperature (= der(T))">
+      <Real
+        declaredType="Modelica.SIunits.TemperatureSlope"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 77 -->
+    <ScalarVariable
+      name="cair.port.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 78 -->
+    <ScalarVariable
+      name="cair.port.Q_flow"
+      valueReference="637534230"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 79 -->
+    <ScalarVariable
+      name="airMix.h_to_s.k"
+      valueReference="16777242"
+      description="Constant output value"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0.0002777777777777778"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 80 -->
+    <ScalarVariable
+      name="airMix.h_to_s.y"
+      valueReference="234881050"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 81 -->
+    <ScalarVariable
+      name="airMix.AirRhoCp.k"
+      valueReference="16777243"
+      description="Constant output value"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1206.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 82 -->
+    <ScalarVariable
+      name="airMix.AirRhoCp.y"
+      valueReference="234881051"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 83 -->
+    <ScalarVariable
+      name="airMix.add.u1"
+      valueReference="33554432"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 84 -->
+    <ScalarVariable
+      name="airMix.add.u2"
+      valueReference="369098778"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 85 -->
+    <ScalarVariable
+      name="airMix.add.y"
+      valueReference="369098775"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 86 -->
+    <ScalarVariable
+      name="airMix.add.k1"
+      valueReference="16777244"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 87 -->
+    <ScalarVariable
+      name="airMix.add.k2"
+      valueReference="16777245"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 88 -->
+    <ScalarVariable
+      name="airMix.multiProduct.significantDigits"
+      valueReference="16777246"
+      description="Number of significant digits to be shown in dynamic diagram layer for y"
+      causality="parameter"
+      variability="fixed">
+      <Integer min="1"
+        start="8"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 89 -->
+    <ScalarVariable
+      name="airMix.multiProduct.u[1]"
+      valueReference="234881050">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealVectorInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 90 -->
+    <ScalarVariable
+      name="airMix.multiProduct.u[2]"
+      valueReference="234881051">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealVectorInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 91 -->
+    <ScalarVariable
+      name="airMix.multiProduct.u[3]"
+      valueReference="369098775">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealVectorInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 92 -->
+    <ScalarVariable
+      name="airMix.multiProduct.u[4]"
+      valueReference="335544323">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealVectorInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 93 -->
+    <ScalarVariable
+      name="airMix.multiProduct.y"
+      valueReference="369098777">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 94 -->
+    <ScalarVariable
+      name="airMix.Tve"
+      valueReference="369098778">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 95 -->
+    <ScalarVariable
+      name="airMix.Ti"
+      valueReference="33554432">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 96 -->
+    <ScalarVariable
+      name="airMix.Vve"
+      valueReference="335544323"
+      description="[m3/h]">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 97 -->
+    <ScalarVariable
+      name="airMix.prescribedHeatFlow.T_ref"
+      valueReference="16777247"
+      description="Reference temperature"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"
+        start="293.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 98 -->
+    <ScalarVariable
+      name="airMix.prescribedHeatFlow.alpha"
+      valueReference="16777248"
+      description="Temperature coefficient of heat flow rate"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.LinearTemperatureCoefficient"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 99 -->
+    <ScalarVariable
+      name="airMix.prescribedHeatFlow.Q_flow"
+      valueReference="369098777">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 100 -->
+    <ScalarVariable
+      name="airMix.prescribedHeatFlow.port.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 101 -->
+    <ScalarVariable
+      name="airMix.prescribedHeatFlow.port.Q_flow"
+      valueReference="369098779"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 102 -->
+    <ScalarVariable
+      name="airMix.port_b.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 103 -->
+    <ScalarVariable
+      name="airMix.port_b.Q_flow"
+      valueReference="369098779"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 104 -->
+    <ScalarVariable
+      name="integrator.k"
+      valueReference="16777249"
+      description="Integrator gain"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 105 -->
+    <ScalarVariable
+      name="integrator.initType"
+      valueReference="100663324"
+      description="Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.Init"
+        start="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 106 -->
+    <ScalarVariable
+      name="integrator.y_start"
+      valueReference="16777250"
+      description="Initial or guess value of output (= state)"
+      causality="parameter"
+      variability="fixed">
+      <Real
+        unit="J"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 107 -->
+    <ScalarVariable
+      name="integrator.u"
+      valueReference="335544324"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 108 -->
+    <ScalarVariable
+      name="integrator.y"
+      valueReference="33554433"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="J"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 109 -->
+    <ScalarVariable
+      name="der(integrator.y)"
+      valueReference="587202561"
+      description="der(Connector of Real output signal)">
+      <Real
+        unit="W"
+        derivative="108"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 110 -->
+    <ScalarVariable
+      name="occ"
+      valueReference="352321538"
+      description="Number of occupants"
+      causality="input">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 111 -->
+    <ScalarVariable
+      name="vetot"
+      valueReference="335544322"
+      description="Total airflow supply [m3]"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 112 -->
+    <ScalarVariable
+      name="integrator1.k"
+      valueReference="16777251"
+      description="Integrator gain"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 113 -->
+    <ScalarVariable
+      name="integrator1.initType"
+      valueReference="100663325"
+      description="Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.Init"
+        start="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 114 -->
+    <ScalarVariable
+      name="integrator1.y_start"
+      valueReference="16777252"
+      description="Initial or guess value of output (= state)"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 115 -->
+    <ScalarVariable
+      name="integrator1.u"
+      valueReference="335544323"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 116 -->
+    <ScalarVariable
+      name="integrator1.y"
+      valueReference="33554434"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 117 -->
+    <ScalarVariable
+      name="der(integrator1.y)"
+      valueReference="587202562"
+      description="der(Connector of Real output signal)">
+      <Real derivative="116"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 118 -->
+    <ScalarVariable
+      name="max1.u1"
+      valueReference="436207617"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 119 -->
+    <ScalarVariable
+      name="max1.u2"
+      valueReference="100663331"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 120 -->
+    <ScalarVariable
+      name="max1.y"
+      valueReference="369098778"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 121 -->
+    <ScalarVariable
+      name="ventilation.k"
+      valueReference="100663326"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 122 -->
+    <ScalarVariable
+      name="ventilation.u"
+      valueReference="369098783"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 123 -->
+    <ScalarVariable
+      name="ventilation.y"
+      valueReference="335544323"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 124 -->
+    <ScalarVariable
+      name="heating.k"
+      valueReference="100663328"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 125 -->
+    <ScalarVariable
+      name="heating.u"
+      valueReference="369098785"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 126 -->
+    <ScalarVariable
+      name="heating.y"
+      valueReference="369098771"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 127 -->
+    <ScalarVariable
+      name="ve"
+      valueReference="335544323"
+      description="Ventilation airflow rate [m3/h]"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 128 -->
+    <ScalarVariable
+      name="qr"
+      valueReference="335544324"
+      description="Heat supply by radiators [W]"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 129 -->
+    <ScalarVariable
+      name="scale.k"
+      valueReference="16777253"
+      description="Gain value multiplied with input signal"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 130 -->
+    <ScalarVariable
+      name="scale.u"
+      valueReference="369098786"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 131 -->
+    <ScalarVariable
+      name="scale.y"
+      valueReference="369098783"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 132 -->
+    <ScalarVariable
+      name="CO2stp"
+      valueReference="352321539"
+      description="CO2 setpoint [ppm]"
+      causality="input">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 133 -->
+    <ScalarVariable
+      name="const2.k"
+      valueReference="100663331"
+      description="Constant output value"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 134 -->
+    <ScalarVariable
+      name="const2.y"
+      valueReference="100663331"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 135 -->
+    <ScalarVariable
+      name="Tstp_cooling"
+      valueReference="352321540"
+      description="Indoor temperature setpoint [degC]"
+      causality="input">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"
+        start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 136 -->
+    <ScalarVariable
+      name="heatFlowSensor1.Q_flow"
+      valueReference="335544325"
+      description="Heat flow from port_a to port_b as output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 137 -->
+    <ScalarVariable
+      name="heatFlowSensor1.port_a.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 138 -->
+    <ScalarVariable
+      name="heatFlowSensor1.port_a.Q_flow"
+      valueReference="335544325"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 139 -->
+    <ScalarVariable
+      name="heatFlowSensor1.port_b.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 140 -->
+    <ScalarVariable
+      name="heatFlowSensor1.port_b.Q_flow"
+      valueReference="369098779"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 141 -->
+    <ScalarVariable
+      name="qv"
+      valueReference="335544325"
+      description="Ventilation heat load [W]"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 142 -->
+    <ScalarVariable
+      name="integrator2.k"
+      valueReference="16777254"
+      description="Integrator gain"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 143 -->
+    <ScalarVariable
+      name="integrator2.initType"
+      valueReference="100663332"
+      description="Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.Init"
+        start="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 144 -->
+    <ScalarVariable
+      name="integrator2.y_start"
+      valueReference="16777255"
+      description="Initial or guess value of output (= state)"
+      causality="parameter"
+      variability="fixed">
+      <Real
+        unit="J"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 145 -->
+    <ScalarVariable
+      name="integrator2.u"
+      valueReference="335544325"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="W"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 146 -->
+    <ScalarVariable
+      name="integrator2.y"
+      valueReference="33554435"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="J"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 147 -->
+    <ScalarVariable
+      name="der(integrator2.y)"
+      valueReference="587202563"
+      description="der(Connector of Real output signal)">
+      <Real
+        unit="W"
+        derivative="146"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 148 -->
+    <ScalarVariable
+      name="Qv"
+      valueReference="335544326"
+      description="Ventilation heat load [Wh]"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="J"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 149 -->
+    <ScalarVariable
+      name="scale1.k"
+      valueReference="16777256"
+      description="Gain value multiplied with input signal"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="0.01"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 150 -->
+    <ScalarVariable
+      name="scale1.u"
+      valueReference="369098789"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 151 -->
+    <ScalarVariable
+      name="scale1.y"
+      valueReference="369098785"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 152 -->
+    <ScalarVariable
+      name="co2.Vve"
+      valueReference="637534246"
+      description="[m3/h]">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 153 -->
+    <ScalarVariable
+      name="co2.CO2"
+      valueReference="33554436">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 154 -->
+    <ScalarVariable
+      name="co2.balance.Vve"
+      valueReference="637534246"
+      description="Ventilation air flow rate [m3/h]">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 155 -->
+    <ScalarVariable
+      name="co2.balance.CO2ppmv_s"
+      valueReference="100663340"
+      description="CO2 concentration in incoming air [ppmv]">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 156 -->
+    <ScalarVariable
+      name="co2.balance.persons"
+      valueReference="436207618"
+      description="Number of persons">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 157 -->
+    <ScalarVariable
+      name="co2.balance.CO2_per_person"
+      valueReference="100663336"
+      description="CO2 generation per person [ppmv/h]">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 158 -->
+    <ScalarVariable
+      name="co2.balance.CO2output"
+      valueReference="33554436">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 159 -->
+    <ScalarVariable
+      name="co2.balance.Vi"
+      valueReference="100663335"
+      description="Indoor volume [m3]"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 160 -->
+    <ScalarVariable
+      name="co2.balance.CO2ppmv_i"
+      valueReference="33554436"
+      description="CO2 indoor concentration [ppmv]"
+      initial="exact">
+      <Real start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 161 -->
+    <ScalarVariable
+      name="der(co2.balance.CO2ppmv_i)"
+      valueReference="587202564"
+      description="der(CO2 indoor concentration [ppmv])">
+      <Real derivative="160"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 162 -->
+    <ScalarVariable
+      name="co2.persons"
+      valueReference="436207618">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 163 -->
+    <ScalarVariable
+      name="co2.CO2Generation.k"
+      valueReference="100663336"
+      description="Constant output value"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 164 -->
+    <ScalarVariable
+      name="co2.CO2Generation.y"
+      valueReference="100663336"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 165 -->
+    <ScalarVariable
+      name="co2.CO2PerPerson"
+      valueReference="100663337"
+      description="CO2 generation per person [m3/h]"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 166 -->
+    <ScalarVariable
+      name="co2.Vi"
+      valueReference="100663338"
+      description="Indoor volume [m3]"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 167 -->
+    <ScalarVariable
+      name="co2.CO2Neutral"
+      valueReference="100663339"
+      description="CO2 Neutral Level"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 168 -->
+    <ScalarVariable
+      name="co2.CO2NeutralLevel.k"
+      valueReference="100663340"
+      description="Constant output value"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 169 -->
+    <ScalarVariable
+      name="co2.CO2NeutralLevel.y"
+      valueReference="100663340"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 170 -->
+    <ScalarVariable
+      name="const1.k"
+      valueReference="100663341"
+      description="Constant output value"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 171 -->
+    <ScalarVariable
+      name="const1.y"
+      valueReference="100663341"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 172 -->
+    <ScalarVariable
+      name="add.u1"
+      valueReference="100663341"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 173 -->
+    <ScalarVariable
+      name="add.u2"
+      valueReference="335544323"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 174 -->
+    <ScalarVariable
+      name="add.y"
+      valueReference="637534246"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 175 -->
+    <ScalarVariable
+      name="add.k1"
+      valueReference="16777257"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 176 -->
+    <ScalarVariable
+      name="add.k2"
+      valueReference="16777258"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 177 -->
+    <ScalarVariable
+      name="CO2"
+      valueReference="335544327"
+      description="CO2 concentration [ppm]"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 178 -->
+    <ScalarVariable
+      name="re1.Q_flow"
+      valueReference="637534254"
+      description="Heat flow rate from port_a -&gt; port_b">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 179 -->
+    <ScalarVariable
+      name="re1.dT"
+      valueReference="637534255"
+      description="port_a.T - port_b.T">
+      <Real
+        declaredType="Modelica.SIunits.TemperatureDifference"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 180 -->
+    <ScalarVariable
+      name="re1.port_a.T"
+      valueReference="33554432"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 181 -->
+    <ScalarVariable
+      name="re1.port_a.Q_flow"
+      valueReference="637534254"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 182 -->
+    <ScalarVariable
+      name="re1.port_b.T"
+      valueReference="33554437"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 183 -->
+    <ScalarVariable
+      name="re1.port_b.Q_flow"
+      valueReference="637534256"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 184 -->
+    <ScalarVariable
+      name="re1.R"
+      valueReference="100663345"
+      description="Constant thermal resistance of material"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.ThermalResistance"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 185 -->
+    <ScalarVariable
+      name="cint.C"
+      valueReference="100663346"
+      description="Heat capacity of element (= cp*m)"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.HeatCapacity"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 186 -->
+    <ScalarVariable
+      name="cint.T"
+      valueReference="33554437"
+      description="Temperature of element"
+      initial="exact">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"
+        start="293.15"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 187 -->
+    <ScalarVariable
+      name="der(cint.T)"
+      valueReference="587202565"
+      description="der(Temperature of element)">
+      <Real
+        unit="K/s"
+        derivative="186"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 188 -->
+    <ScalarVariable
+      name="cint.der_T"
+      valueReference="587202565"
+      description="Time derivative of temperature (= der(T))">
+      <Real
+        declaredType="Modelica.SIunits.TemperatureSlope"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 189 -->
+    <ScalarVariable
+      name="cint.port.T"
+      valueReference="33554437"
+      description="Port temperature">
+      <Real
+        declaredType="Modelica.SIunits.Temperature"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 190 -->
+    <ScalarVariable
+      name="cint.port.Q_flow"
+      valueReference="637534254"
+      description="Heat flow rate (positive if flowing from outside into the component)">
+      <Real
+        declaredType="Modelica.SIunits.HeatFlowRate"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 191 -->
+    <ScalarVariable
+      name="PIDco2.u_s"
+      valueReference="436207619"
+      description="Connector of setpoint input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 192 -->
+    <ScalarVariable
+      name="PIDco2.u_m"
+      valueReference="33554436"
+      description="Connector of measurement input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 193 -->
+    <ScalarVariable
+      name="PIDco2.y"
+      valueReference="369098786"
+      description="Connector of actuator output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 194 -->
+    <ScalarVariable
+      name="PIDco2.controlError"
+      valueReference="905969715"
+      description="Control error (set point - measurement)">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 195 -->
+    <ScalarVariable
+      name="PIDco2.controllerType"
+      valueReference="100663348"
+      description="Type of controller"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.SimpleController"
+        start="2"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 196 -->
+    <ScalarVariable
+      name="PIDco2.k"
+      valueReference="100663349"
+      description="Gain of controller"
+      variability="tunable">
+      <Real
+        unit="1"
+        min="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 197 -->
+    <ScalarVariable
+      name="PIDco2.Ti"
+      valueReference="16777259"
+      description="Time constant of Integrator block"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.Time"
+        min="1E-60"
+        start="0.5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 198 -->
+    <ScalarVariable
+      name="PIDco2.Td"
+      valueReference="16777260"
+      description="Time constant of Derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real
+        declaredType="Modelica.SIunits.Time"
+        min="0.0"
+        start="0.1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 199 -->
+    <ScalarVariable
+      name="PIDco2.yMax"
+      valueReference="16777261"
+      description="Upper limit of output"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 200 -->
+    <ScalarVariable
+      name="PIDco2.yMin"
+      valueReference="16777262"
+      description="Lower limit of output"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-100"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 201 -->
+    <ScalarVariable
+      name="PIDco2.wp"
+      valueReference="16777263"
+      description="Set-point weight for Proportional block (0..1)"
+      causality="parameter"
+      variability="tunable">
+      <Real min="0.0"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 202 -->
+    <ScalarVariable
+      name="PIDco2.wd"
+      valueReference="16777264"
+      description="Set-point weight for Derivative block (0..1)"
+      causality="parameter"
+      variability="fixed">
+      <Real min="0.0"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 203 -->
+    <ScalarVariable
+      name="PIDco2.Ni"
+      valueReference="16777265"
+      description="Ni*Ti is time constant of anti-windup compensation"
+      causality="parameter"
+      variability="tunable">
+      <Real min="1E-13"
+        start="0.9"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 204 -->
+    <ScalarVariable
+      name="PIDco2.Nd"
+      valueReference="16777266"
+      description="The higher Nd, the more ideal the derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real min="1E-13"
+        start="10"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 205 -->
+    <ScalarVariable
+      name="PIDco2.initType"
+      valueReference="100663350"
+      description="Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.InitPID"
+        start="5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 206 -->
+    <ScalarVariable
+      name="PIDco2.limitsAtInit"
+      valueReference="100663351"
+      description="= false, if limits are ignored during initialization"
+      variability="constant">
+      <Boolean start="true"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 207 -->
+    <ScalarVariable
+      name="PIDco2.xi_start"
+      valueReference="16777267"
+      description="Initial or guess value value for integrator output (= integrator state)"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 208 -->
+    <ScalarVariable
+      name="PIDco2.xd_start"
+      valueReference="16777268"
+      description="Initial or guess value for state of derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 209 -->
+    <ScalarVariable
+      name="PIDco2.y_start"
+      valueReference="16777269"
+      description="Initial value of output"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 210 -->
+    <ScalarVariable
+      name="PIDco2.strict"
+      valueReference="100663352"
+      description="= true, if strict limits with noEvent(..)"
+      variability="constant">
+      <Boolean start="false"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 211 -->
+    <ScalarVariable
+      name="PIDco2.addP.u1"
+      valueReference="436207619"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 212 -->
+    <ScalarVariable
+      name="PIDco2.addP.u2"
+      valueReference="33554436"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 213 -->
+    <ScalarVariable
+      name="PIDco2.addP.y"
+      valueReference="369098810"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 214 -->
+    <ScalarVariable
+      name="PIDco2.addP.k1"
+      valueReference="100663355"
+      description="Gain of upper input"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 215 -->
+    <ScalarVariable
+      name="PIDco2.addP.k2"
+      valueReference="16777270"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 216 -->
+    <ScalarVariable
+      name="PIDco2.P.k"
+      valueReference="16777271"
+      description="Gain value multiplied with input signal"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 217 -->
+    <ScalarVariable
+      name="PIDco2.P.u"
+      valueReference="369098810"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 218 -->
+    <ScalarVariable
+      name="PIDco2.P.y"
+      valueReference="369098812"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 219 -->
+    <ScalarVariable
+      name="PIDco2.gainPID.k"
+      valueReference="100663357"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 220 -->
+    <ScalarVariable
+      name="PIDco2.gainPID.u"
+      valueReference="369098814"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 221 -->
+    <ScalarVariable
+      name="PIDco2.gainPID.y"
+      valueReference="369098815"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 222 -->
+    <ScalarVariable
+      name="PIDco2.addPID.k1"
+      valueReference="16777272"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 223 -->
+    <ScalarVariable
+      name="PIDco2.addPID.k2"
+      valueReference="16777273"
+      description="Gain of middle input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 224 -->
+    <ScalarVariable
+      name="PIDco2.addPID.k3"
+      valueReference="16777274"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 225 -->
+    <ScalarVariable
+      name="PIDco2.addPID.u1"
+      valueReference="369098812"
+      description="Connector 1 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 226 -->
+    <ScalarVariable
+      name="PIDco2.addPID.u2"
+      valueReference="234881083"
+      description="Connector 2 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 227 -->
+    <ScalarVariable
+      name="PIDco2.addPID.u3"
+      valueReference="33554438"
+      description="Connector 3 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 228 -->
+    <ScalarVariable
+      name="PIDco2.addPID.y"
+      valueReference="369098814"
+      description="Connector of Real output signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 229 -->
+    <ScalarVariable
+      name="PIDco2.limiter.uMax"
+      valueReference="100663360"
+      description="Upper limits of input signals"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 230 -->
+    <ScalarVariable
+      name="PIDco2.limiter.uMin"
+      valueReference="100663361"
+      description="Lower limits of input signals"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 231 -->
+    <ScalarVariable
+      name="PIDco2.limiter.strict"
+      valueReference="100663362"
+      description="= true, if strict limits with noEvent(..)"
+      variability="constant">
+      <Boolean start="false"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 232 -->
+    <ScalarVariable
+      name="PIDco2.limiter.limitsAtInit"
+      valueReference="100663363"
+      description="Has no longer an effect and is only kept for backwards compatibility (the implementation uses now the homotopy operator)"
+      variability="constant">
+      <Boolean start="true"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 233 -->
+    <ScalarVariable
+      name="PIDco2.limiter.u"
+      valueReference="369098815"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 234 -->
+    <ScalarVariable
+      name="PIDco2.limiter.y"
+      valueReference="369098786"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 235 -->
+    <ScalarVariable
+      name="PIDco2.Dzero.k"
+      valueReference="16777275"
+      description="Constant output value"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 236 -->
+    <ScalarVariable
+      name="PIDco2.Dzero.y"
+      valueReference="234881083"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 237 -->
+    <ScalarVariable
+      name="PIDco2.I.k"
+      valueReference="100663366"
+      description="Integrator gain"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 238 -->
+    <ScalarVariable
+      name="PIDco2.I.initType"
+      valueReference="100663367"
+      description="Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.Init"
+        start="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 239 -->
+    <ScalarVariable
+      name="PIDco2.I.y_start"
+      valueReference="100663368"
+      description="Initial or guess value of output (= state)"
+      variability="fixed">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 240 -->
+    <ScalarVariable
+      name="PIDco2.I.u"
+      valueReference="637534281"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 241 -->
+    <ScalarVariable
+      name="PIDco2.I.y"
+      valueReference="33554438"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 242 -->
+    <ScalarVariable
+      name="der(PIDco2.I.y)"
+      valueReference="587202566"
+      description="der(Connector of Real output signal)">
+      <Real derivative="241"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 243 -->
+    <ScalarVariable
+      name="PIDco2.addI.k1"
+      valueReference="16777276"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 244 -->
+    <ScalarVariable
+      name="PIDco2.addI.k2"
+      valueReference="16777277"
+      description="Gain of middle input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 245 -->
+    <ScalarVariable
+      name="PIDco2.addI.k3"
+      valueReference="16777278"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 246 -->
+    <ScalarVariable
+      name="PIDco2.addI.u1"
+      valueReference="436207619"
+      description="Connector 1 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 247 -->
+    <ScalarVariable
+      name="PIDco2.addI.u2"
+      valueReference="33554436"
+      description="Connector 2 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 248 -->
+    <ScalarVariable
+      name="PIDco2.addI.u3"
+      valueReference="637534282"
+      description="Connector 3 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 249 -->
+    <ScalarVariable
+      name="PIDco2.addI.y"
+      valueReference="637534281"
+      description="Connector of Real output signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 250 -->
+    <ScalarVariable
+      name="PIDco2.addSat.u1"
+      valueReference="369098786"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 251 -->
+    <ScalarVariable
+      name="PIDco2.addSat.u2"
+      valueReference="369098815"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 252 -->
+    <ScalarVariable
+      name="PIDco2.addSat.y"
+      valueReference="637534283"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 253 -->
+    <ScalarVariable
+      name="PIDco2.addSat.k1"
+      valueReference="16777279"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 254 -->
+    <ScalarVariable
+      name="PIDco2.addSat.k2"
+      valueReference="16777280"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 255 -->
+    <ScalarVariable
+      name="PIDco2.gainTrack.k"
+      valueReference="100663372"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 256 -->
+    <ScalarVariable
+      name="PIDco2.gainTrack.u"
+      valueReference="637534283"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 257 -->
+    <ScalarVariable
+      name="PIDco2.gainTrack.y"
+      valueReference="637534282"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 258 -->
+    <ScalarVariable
+      name="PIDt.u_s"
+      valueReference="436207620"
+      description="Connector of setpoint input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 259 -->
+    <ScalarVariable
+      name="PIDt.u_m"
+      valueReference="33554432"
+      description="Connector of measurement input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 260 -->
+    <ScalarVariable
+      name="PIDt.y"
+      valueReference="369098829"
+      description="Connector of actuator output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 261 -->
+    <ScalarVariable
+      name="PIDt.controlError"
+      valueReference="905969742"
+      description="Control error (set point - measurement)">
+      <Real
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 262 -->
+    <ScalarVariable
+      name="PIDt.controllerType"
+      valueReference="100663375"
+      description="Type of controller"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.SimpleController"
+        start="2"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 263 -->
+    <ScalarVariable
+      name="PIDt.k"
+      valueReference="100663376"
+      description="Gain of controller"
+      variability="tunable">
+      <Real
+        unit="1"
+        min="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 264 -->
+    <ScalarVariable
+      name="PIDt.Ti"
+      valueReference="16777281"
+      description="Time constant of Integrator block"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.Time"
+        min="1E-60"
+        start="0.5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 265 -->
+    <ScalarVariable
+      name="PIDt.Td"
+      valueReference="16777282"
+      description="Time constant of Derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real
+        declaredType="Modelica.SIunits.Time"
+        min="0.0"
+        start="0.1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 266 -->
+    <ScalarVariable
+      name="PIDt.yMax"
+      valueReference="16777283"
+      description="Upper limit of output"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 267 -->
+    <ScalarVariable
+      name="PIDt.yMin"
+      valueReference="16777284"
+      description="Lower limit of output"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-100"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 268 -->
+    <ScalarVariable
+      name="PIDt.wp"
+      valueReference="16777285"
+      description="Set-point weight for Proportional block (0..1)"
+      causality="parameter"
+      variability="tunable">
+      <Real min="0.0"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 269 -->
+    <ScalarVariable
+      name="PIDt.wd"
+      valueReference="16777286"
+      description="Set-point weight for Derivative block (0..1)"
+      causality="parameter"
+      variability="fixed">
+      <Real min="0.0"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 270 -->
+    <ScalarVariable
+      name="PIDt.Ni"
+      valueReference="16777287"
+      description="Ni*Ti is time constant of anti-windup compensation"
+      causality="parameter"
+      variability="tunable">
+      <Real min="1E-13"
+        start="0.9"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 271 -->
+    <ScalarVariable
+      name="PIDt.Nd"
+      valueReference="16777288"
+      description="The higher Nd, the more ideal the derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real min="1E-13"
+        start="10"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 272 -->
+    <ScalarVariable
+      name="PIDt.initType"
+      valueReference="100663377"
+      description="Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.InitPID"
+        start="5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 273 -->
+    <ScalarVariable
+      name="PIDt.limitsAtInit"
+      valueReference="100663378"
+      description="= false, if limits are ignored during initialization"
+      variability="constant">
+      <Boolean start="true"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 274 -->
+    <ScalarVariable
+      name="PIDt.xi_start"
+      valueReference="16777289"
+      description="Initial or guess value value for integrator output (= integrator state)"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 275 -->
+    <ScalarVariable
+      name="PIDt.xd_start"
+      valueReference="16777290"
+      description="Initial or guess value for state of derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 276 -->
+    <ScalarVariable
+      name="PIDt.y_start"
+      valueReference="16777291"
+      description="Initial value of output"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 277 -->
+    <ScalarVariable
+      name="PIDt.strict"
+      valueReference="100663379"
+      description="= true, if strict limits with noEvent(..)"
+      variability="constant">
+      <Boolean start="false"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 278 -->
+    <ScalarVariable
+      name="PIDt.addP.u1"
+      valueReference="436207620"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 279 -->
+    <ScalarVariable
+      name="PIDt.addP.u2"
+      valueReference="33554432"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 280 -->
+    <ScalarVariable
+      name="PIDt.addP.y"
+      valueReference="369098837"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 281 -->
+    <ScalarVariable
+      name="PIDt.addP.k1"
+      valueReference="100663382"
+      description="Gain of upper input"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 282 -->
+    <ScalarVariable
+      name="PIDt.addP.k2"
+      valueReference="16777292"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 283 -->
+    <ScalarVariable
+      name="PIDt.P.k"
+      valueReference="16777293"
+      description="Gain value multiplied with input signal"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 284 -->
+    <ScalarVariable
+      name="PIDt.P.u"
+      valueReference="369098837"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 285 -->
+    <ScalarVariable
+      name="PIDt.P.y"
+      valueReference="369098839"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 286 -->
+    <ScalarVariable
+      name="PIDt.gainPID.k"
+      valueReference="100663384"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 287 -->
+    <ScalarVariable
+      name="PIDt.gainPID.u"
+      valueReference="369098841"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 288 -->
+    <ScalarVariable
+      name="PIDt.gainPID.y"
+      valueReference="369098842"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 289 -->
+    <ScalarVariable
+      name="PIDt.addPID.k1"
+      valueReference="16777294"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 290 -->
+    <ScalarVariable
+      name="PIDt.addPID.k2"
+      valueReference="16777295"
+      description="Gain of middle input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 291 -->
+    <ScalarVariable
+      name="PIDt.addPID.k3"
+      valueReference="16777296"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 292 -->
+    <ScalarVariable
+      name="PIDt.addPID.u1"
+      valueReference="369098839"
+      description="Connector 1 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 293 -->
+    <ScalarVariable
+      name="PIDt.addPID.u2"
+      valueReference="234881105"
+      description="Connector 2 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 294 -->
+    <ScalarVariable
+      name="PIDt.addPID.u3"
+      valueReference="33554439"
+      description="Connector 3 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 295 -->
+    <ScalarVariable
+      name="PIDt.addPID.y"
+      valueReference="369098841"
+      description="Connector of Real output signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 296 -->
+    <ScalarVariable
+      name="PIDt.limiter.uMax"
+      valueReference="100663387"
+      description="Upper limits of input signals"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 297 -->
+    <ScalarVariable
+      name="PIDt.limiter.uMin"
+      valueReference="100663388"
+      description="Lower limits of input signals"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 298 -->
+    <ScalarVariable
+      name="PIDt.limiter.strict"
+      valueReference="100663389"
+      description="= true, if strict limits with noEvent(..)"
+      variability="constant">
+      <Boolean start="false"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 299 -->
+    <ScalarVariable
+      name="PIDt.limiter.limitsAtInit"
+      valueReference="100663390"
+      description="Has no longer an effect and is only kept for backwards compatibility (the implementation uses now the homotopy operator)"
+      variability="constant">
+      <Boolean start="true"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 300 -->
+    <ScalarVariable
+      name="PIDt.limiter.u"
+      valueReference="369098842"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 301 -->
+    <ScalarVariable
+      name="PIDt.limiter.y"
+      valueReference="369098829"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 302 -->
+    <ScalarVariable
+      name="PIDt.Dzero.k"
+      valueReference="16777297"
+      description="Constant output value"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 303 -->
+    <ScalarVariable
+      name="PIDt.Dzero.y"
+      valueReference="234881105"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 304 -->
+    <ScalarVariable
+      name="PIDt.I.k"
+      valueReference="100663393"
+      description="Integrator gain"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 305 -->
+    <ScalarVariable
+      name="PIDt.I.initType"
+      valueReference="100663394"
+      description="Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.Init"
+        start="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 306 -->
+    <ScalarVariable
+      name="PIDt.I.y_start"
+      valueReference="100663395"
+      description="Initial or guess value of output (= state)"
+      variability="fixed">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 307 -->
+    <ScalarVariable
+      name="PIDt.I.u"
+      valueReference="637534308"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 308 -->
+    <ScalarVariable
+      name="PIDt.I.y"
+      valueReference="33554439"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 309 -->
+    <ScalarVariable
+      name="der(PIDt.I.y)"
+      valueReference="587202567"
+      description="der(Connector of Real output signal)">
+      <Real derivative="308"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 310 -->
+    <ScalarVariable
+      name="PIDt.addI.k1"
+      valueReference="16777298"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 311 -->
+    <ScalarVariable
+      name="PIDt.addI.k2"
+      valueReference="16777299"
+      description="Gain of middle input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 312 -->
+    <ScalarVariable
+      name="PIDt.addI.k3"
+      valueReference="16777300"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 313 -->
+    <ScalarVariable
+      name="PIDt.addI.u1"
+      valueReference="436207620"
+      description="Connector 1 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 314 -->
+    <ScalarVariable
+      name="PIDt.addI.u2"
+      valueReference="33554432"
+      description="Connector 2 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 315 -->
+    <ScalarVariable
+      name="PIDt.addI.u3"
+      valueReference="637534309"
+      description="Connector 3 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 316 -->
+    <ScalarVariable
+      name="PIDt.addI.y"
+      valueReference="637534308"
+      description="Connector of Real output signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 317 -->
+    <ScalarVariable
+      name="PIDt.addSat.u1"
+      valueReference="369098829"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 318 -->
+    <ScalarVariable
+      name="PIDt.addSat.u2"
+      valueReference="369098842"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 319 -->
+    <ScalarVariable
+      name="PIDt.addSat.y"
+      valueReference="637534310"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 320 -->
+    <ScalarVariable
+      name="PIDt.addSat.k1"
+      valueReference="16777301"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 321 -->
+    <ScalarVariable
+      name="PIDt.addSat.k2"
+      valueReference="16777302"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 322 -->
+    <ScalarVariable
+      name="PIDt.gainTrack.k"
+      valueReference="100663399"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 323 -->
+    <ScalarVariable
+      name="PIDt.gainTrack.u"
+      valueReference="637534310"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 324 -->
+    <ScalarVariable
+      name="PIDt.gainTrack.y"
+      valueReference="637534309"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 325 -->
+    <ScalarVariable
+      name="PIDt1.u_s"
+      valueReference="436207621"
+      description="Connector of setpoint input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 326 -->
+    <ScalarVariable
+      name="PIDt1.u_m"
+      valueReference="33554432"
+      description="Connector of measurement input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 327 -->
+    <ScalarVariable
+      name="PIDt1.y"
+      valueReference="369098856"
+      description="Connector of actuator output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 328 -->
+    <ScalarVariable
+      name="PIDt1.controlError"
+      valueReference="905969769"
+      description="Control error (set point - measurement)">
+      <Real
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 329 -->
+    <ScalarVariable
+      name="PIDt1.controllerType"
+      valueReference="100663402"
+      description="Type of controller"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.SimpleController"
+        start="2"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 330 -->
+    <ScalarVariable
+      name="PIDt1.k"
+      valueReference="100663403"
+      description="Gain of controller"
+      variability="tunable">
+      <Real
+        unit="1"
+        min="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 331 -->
+    <ScalarVariable
+      name="PIDt1.Ti"
+      valueReference="16777303"
+      description="Time constant of Integrator block"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        declaredType="Modelica.SIunits.Time"
+        min="1E-60"
+        start="0.5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 332 -->
+    <ScalarVariable
+      name="PIDt1.Td"
+      valueReference="16777304"
+      description="Time constant of Derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real
+        declaredType="Modelica.SIunits.Time"
+        min="0.0"
+        start="0.1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 333 -->
+    <ScalarVariable
+      name="PIDt1.yMax"
+      valueReference="16777305"
+      description="Upper limit of output"
+      causality="parameter"
+      variability="tunable">
+      <Real start="100"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 334 -->
+    <ScalarVariable
+      name="PIDt1.yMin"
+      valueReference="16777306"
+      description="Lower limit of output"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 335 -->
+    <ScalarVariable
+      name="PIDt1.wp"
+      valueReference="16777307"
+      description="Set-point weight for Proportional block (0..1)"
+      causality="parameter"
+      variability="tunable">
+      <Real min="0.0"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 336 -->
+    <ScalarVariable
+      name="PIDt1.wd"
+      valueReference="16777308"
+      description="Set-point weight for Derivative block (0..1)"
+      causality="parameter"
+      variability="fixed">
+      <Real min="0.0"
+        start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 337 -->
+    <ScalarVariable
+      name="PIDt1.Ni"
+      valueReference="16777309"
+      description="Ni*Ti is time constant of anti-windup compensation"
+      causality="parameter"
+      variability="tunable">
+      <Real min="1E-13"
+        start="0.9"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 338 -->
+    <ScalarVariable
+      name="PIDt1.Nd"
+      valueReference="16777310"
+      description="The higher Nd, the more ideal the derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real min="1E-13"
+        start="10"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 339 -->
+    <ScalarVariable
+      name="PIDt1.initType"
+      valueReference="100663404"
+      description="Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.InitPID"
+        start="5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 340 -->
+    <ScalarVariable
+      name="PIDt1.limitsAtInit"
+      valueReference="100663405"
+      description="= false, if limits are ignored during initialization"
+      variability="constant">
+      <Boolean start="true"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 341 -->
+    <ScalarVariable
+      name="PIDt1.xi_start"
+      valueReference="16777311"
+      description="Initial or guess value value for integrator output (= integrator state)"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 342 -->
+    <ScalarVariable
+      name="PIDt1.xd_start"
+      valueReference="16777312"
+      description="Initial or guess value for state of derivative block"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 343 -->
+    <ScalarVariable
+      name="PIDt1.y_start"
+      valueReference="16777313"
+      description="Initial value of output"
+      causality="parameter"
+      variability="fixed">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 344 -->
+    <ScalarVariable
+      name="PIDt1.strict"
+      valueReference="100663406"
+      description="= true, if strict limits with noEvent(..)"
+      variability="constant">
+      <Boolean start="false"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 345 -->
+    <ScalarVariable
+      name="PIDt1.addP.u1"
+      valueReference="436207621"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 346 -->
+    <ScalarVariable
+      name="PIDt1.addP.u2"
+      valueReference="33554432"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 347 -->
+    <ScalarVariable
+      name="PIDt1.addP.y"
+      valueReference="369098864"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 348 -->
+    <ScalarVariable
+      name="PIDt1.addP.k1"
+      valueReference="100663409"
+      description="Gain of upper input"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 349 -->
+    <ScalarVariable
+      name="PIDt1.addP.k2"
+      valueReference="16777314"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 350 -->
+    <ScalarVariable
+      name="PIDt1.P.k"
+      valueReference="16777315"
+      description="Gain value multiplied with input signal"
+      causality="parameter"
+      variability="tunable">
+      <Real
+        unit="1"
+        start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 351 -->
+    <ScalarVariable
+      name="PIDt1.P.u"
+      valueReference="369098864"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 352 -->
+    <ScalarVariable
+      name="PIDt1.P.y"
+      valueReference="369098866"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 353 -->
+    <ScalarVariable
+      name="PIDt1.gainPID.k"
+      valueReference="100663411"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 354 -->
+    <ScalarVariable
+      name="PIDt1.gainPID.u"
+      valueReference="369098868"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 355 -->
+    <ScalarVariable
+      name="PIDt1.gainPID.y"
+      valueReference="369098869"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 356 -->
+    <ScalarVariable
+      name="PIDt1.addPID.k1"
+      valueReference="16777316"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 357 -->
+    <ScalarVariable
+      name="PIDt1.addPID.k2"
+      valueReference="16777317"
+      description="Gain of middle input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 358 -->
+    <ScalarVariable
+      name="PIDt1.addPID.k3"
+      valueReference="16777318"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 359 -->
+    <ScalarVariable
+      name="PIDt1.addPID.u1"
+      valueReference="369098866"
+      description="Connector 1 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 360 -->
+    <ScalarVariable
+      name="PIDt1.addPID.u2"
+      valueReference="234881127"
+      description="Connector 2 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 361 -->
+    <ScalarVariable
+      name="PIDt1.addPID.u3"
+      valueReference="33554440"
+      description="Connector 3 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 362 -->
+    <ScalarVariable
+      name="PIDt1.addPID.y"
+      valueReference="369098868"
+      description="Connector of Real output signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 363 -->
+    <ScalarVariable
+      name="PIDt1.limiter.uMax"
+      valueReference="100663414"
+      description="Upper limits of input signals"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 364 -->
+    <ScalarVariable
+      name="PIDt1.limiter.uMin"
+      valueReference="100663415"
+      description="Lower limits of input signals"
+      variability="tunable">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 365 -->
+    <ScalarVariable
+      name="PIDt1.limiter.strict"
+      valueReference="100663416"
+      description="= true, if strict limits with noEvent(..)"
+      variability="constant">
+      <Boolean start="false"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 366 -->
+    <ScalarVariable
+      name="PIDt1.limiter.limitsAtInit"
+      valueReference="100663417"
+      description="Has no longer an effect and is only kept for backwards compatibility (the implementation uses now the homotopy operator)"
+      variability="constant">
+      <Boolean start="true"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 367 -->
+    <ScalarVariable
+      name="PIDt1.limiter.u"
+      valueReference="369098869"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 368 -->
+    <ScalarVariable
+      name="PIDt1.limiter.y"
+      valueReference="369098856"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 369 -->
+    <ScalarVariable
+      name="PIDt1.Dzero.k"
+      valueReference="16777319"
+      description="Constant output value"
+      causality="parameter"
+      variability="tunable">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 370 -->
+    <ScalarVariable
+      name="PIDt1.Dzero.y"
+      valueReference="234881127"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 371 -->
+    <ScalarVariable
+      name="PIDt1.I.k"
+      valueReference="100663420"
+      description="Integrator gain"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 372 -->
+    <ScalarVariable
+      name="PIDt1.I.initType"
+      valueReference="100663421"
+      description="Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
+      variability="constant">
+      <Enumeration
+        declaredType="Modelica.Blocks.Types.Init"
+        start="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 373 -->
+    <ScalarVariable
+      name="PIDt1.I.y_start"
+      valueReference="100663422"
+      description="Initial or guess value of output (= state)"
+      variability="fixed">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 374 -->
+    <ScalarVariable
+      name="PIDt1.I.u"
+      valueReference="637534335"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 375 -->
+    <ScalarVariable
+      name="PIDt1.I.y"
+      valueReference="33554440"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 376 -->
+    <ScalarVariable
+      name="der(PIDt1.I.y)"
+      valueReference="587202568"
+      description="der(Connector of Real output signal)">
+      <Real derivative="375"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 377 -->
+    <ScalarVariable
+      name="PIDt1.addI.k1"
+      valueReference="16777320"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 378 -->
+    <ScalarVariable
+      name="PIDt1.addI.k2"
+      valueReference="16777321"
+      description="Gain of middle input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 379 -->
+    <ScalarVariable
+      name="PIDt1.addI.k3"
+      valueReference="16777322"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 380 -->
+    <ScalarVariable
+      name="PIDt1.addI.u1"
+      valueReference="436207621"
+      description="Connector 1 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 381 -->
+    <ScalarVariable
+      name="PIDt1.addI.u2"
+      valueReference="33554432"
+      description="Connector 2 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 382 -->
+    <ScalarVariable
+      name="PIDt1.addI.u3"
+      valueReference="637534336"
+      description="Connector 3 of Real input signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 383 -->
+    <ScalarVariable
+      name="PIDt1.addI.y"
+      valueReference="637534335"
+      description="Connector of Real output signals">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 384 -->
+    <ScalarVariable
+      name="PIDt1.addSat.u1"
+      valueReference="369098856"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 385 -->
+    <ScalarVariable
+      name="PIDt1.addSat.u2"
+      valueReference="369098869"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 386 -->
+    <ScalarVariable
+      name="PIDt1.addSat.y"
+      valueReference="637534337"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 387 -->
+    <ScalarVariable
+      name="PIDt1.addSat.k1"
+      valueReference="16777323"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 388 -->
+    <ScalarVariable
+      name="PIDt1.addSat.k2"
+      valueReference="16777324"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="-1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 389 -->
+    <ScalarVariable
+      name="PIDt1.gainTrack.k"
+      valueReference="100663426"
+      description="Gain value multiplied with input signal"
+      variability="tunable">
+      <Real
+        unit="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 390 -->
+    <ScalarVariable
+      name="PIDt1.gainTrack.u"
+      valueReference="637534337"
+      description="Input signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 391 -->
+    <ScalarVariable
+      name="PIDt1.gainTrack.y"
+      valueReference="637534336"
+      description="Output signal connector">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 392 -->
+    <ScalarVariable
+      name="Tstp_heating"
+      valueReference="352321541"
+      description="Indoor temperature setpoint [degC]"
+      causality="input">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        unit="K"
+        start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 393 -->
+    <ScalarVariable
+      name="add1.u1"
+      valueReference="369098829"
+      description="Connector of Real input signal 1">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 394 -->
+    <ScalarVariable
+      name="add1.u2"
+      valueReference="369098856"
+      description="Connector of Real input signal 2">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 395 -->
+    <ScalarVariable
+      name="add1.y"
+      valueReference="369098789"
+      description="Connector of Real output signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 396 -->
+    <ScalarVariable
+      name="add1.k1"
+      valueReference="16777325"
+      description="Gain of upper input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 397 -->
+    <ScalarVariable
+      name="add1.k2"
+      valueReference="16777326"
+      description="Gain of lower input"
+      causality="parameter"
+      variability="tunable">
+      <Real start="1"/>
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="18"
+        dependencies="74"
+        dependenciesKind="fixed"/>
+      <Unknown index="64"
+        dependencies="108"
+        dependenciesKind="fixed"/>
+      <Unknown index="111"
+        dependencies="116"
+        dependenciesKind="fixed"/>
+      <Unknown index="127"
+        dependencies="132 160 241"
+        dependenciesKind="fixed fixed fixed"/>
+      <Unknown index="128"
+        dependencies="74 135 308 375 392"
+        dependenciesKind="dependent fixed fixed fixed fixed"/>
+      <Unknown index="141"
+        dependencies="17 74 132 160 241"
+        dependenciesKind="dependent dependent fixed fixed fixed"/>
+      <Unknown index="148"
+        dependencies="146"
+        dependenciesKind="fixed"/>
+      <Unknown index="177"
+        dependencies="160"
+        dependenciesKind="fixed"/>
+    </Outputs>
+    <Derivatives>
+      <Unknown index="75"
+        dependencies="16 17 74 110 132 135 160 186 241 308 375 392"
+        dependenciesKind="fixed dependent dependent dependent fixed fixed fixed fixed fixed fixed fixed fixed"/>
+      <Unknown index="109"
+        dependencies="74 135 308 375 392"
+        dependenciesKind="dependent fixed fixed fixed fixed"/>
+      <Unknown index="117"
+        dependencies="132 160 241"
+        dependenciesKind="fixed fixed fixed"/>
+      <Unknown index="147"
+        dependencies="17 74 132 160 241"
+        dependenciesKind="dependent dependent fixed fixed fixed"/>
+      <Unknown index="161"
+        dependencies="110 132 160 241"
+        dependenciesKind="fixed fixed dependent fixed"/>
+      <Unknown index="187"
+        dependencies="74 186"
+        dependenciesKind="fixed fixed"/>
+      <Unknown index="242"
+        dependencies="132 160 241"
+        dependenciesKind="fixed fixed fixed"/>
+      <Unknown index="309"
+        dependencies="74 135 308"
+        dependenciesKind="fixed fixed fixed"/>
+      <Unknown index="376"
+        dependencies="74 375 392"
+        dependenciesKind="fixed fixed fixed"/>
+    </Derivatives>
+    <InitialUnknowns>
+      <Unknown index="18"
+        dependencies="74"
+        dependenciesKind="dependent"/>
+      <Unknown index="64"
+        dependencies="106"
+        dependenciesKind="dependent"/>
+      <Unknown index="75"
+        dependencies="1 2 3 5 6 7 8 12 13 14 15 16 17 32 33 40 41 49 50 51 52 65 66 74 79 81 86 87 97 98 110 129 132 135 149 160 186 199 200 201 207 215 216 222 223 224 235 266 267 268 274 282 283 289 290 291 302 333 334 335 341 349 350 356 357 358 369 392 396 397"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="108"
+        dependencies="106"
+        dependenciesKind="dependent"/>
+      <Unknown index="109"
+        dependencies="6 15 65 66 74 104 135 149 266 267 268 274 282 283 289 290 291 302 333 334 335 341 349 350 356 357 358 369 392 396 397"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="111"
+        dependencies="114"
+        dependenciesKind="dependent"/>
+      <Unknown index="116"
+        dependencies="114"
+        dependenciesKind="dependent"/>
+      <Unknown index="117"
+        dependencies="13 14 112 129 132 160 199 200 201 207 215 216 222 223 224 235"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="127"
+        dependencies="13 14 129 132 160 199 200 201 207 215 216 222 223 224 235"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="128"
+        dependencies="6 15 65 66 74 135 149 266 267 268 274 282 283 289 290 291 302 333 334 335 341 349 350 356 357 358 369 392 396 397"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="141"
+        dependencies="7 13 14 17 74 79 81 86 87 97 98 129 132 160 199 200 201 207 215 216 222 223 224 235"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="146"
+        dependencies="144"
+        dependenciesKind="dependent"/>
+      <Unknown index="147"
+        dependencies="7 13 14 17 74 79 81 86 87 97 98 129 132 142 160 199 200 201 207 215 216 222 223 224 235"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="148"
+        dependencies="144"
+        dependenciesKind="dependent"/>
+      <Unknown index="161"
+        dependencies="9 10 11 12 13 14 110 129 132 160 175 176 199 200 201 207 215 216 222 223 224 235"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="177"
+        dependencies="160"
+        dependenciesKind="dependent"/>
+      <Unknown index="187"
+        dependencies="2 4 12 74 186"
+        dependenciesKind="dependent dependent dependent dependent dependent"/>
+      <Unknown index="241"
+        dependencies="207"
+        dependenciesKind="dependent"/>
+      <Unknown index="242"
+        dependencies="14 132 160 197 199 200 201 203 207 215 216 222 223 224 235 243 244 245 253 254"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="308"
+        dependencies="274"
+        dependenciesKind="dependent"/>
+      <Unknown index="309"
+        dependencies="15 74 135 264 266 267 268 270 274 282 283 289 290 291 302 310 311 312 320 321"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+      <Unknown index="375"
+        dependencies="341"
+        dependenciesKind="dependent"/>
+      <Unknown index="376"
+        dependencies="15 74 331 333 334 335 337 341 349 350 356 357 358 369 377 378 379 387 388 392"
+        dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent"/>
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>
